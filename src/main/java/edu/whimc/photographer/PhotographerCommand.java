@@ -15,21 +15,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+/**
+ * The base command class. Handles all /photographer subcommands.
+ */
 public class PhotographerCommand implements CommandExecutor, TabCompleter {
-
+    /** The instance of the plugin. */
     private final Photographer plugin;
 
+    /**
+     * Constructs a PhotographerCommand.
+     * @param plugin the instance of the plugin.
+     */
     public PhotographerCommand(Photographer plugin) {
         this.plugin = plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // exit if sender does not have sufficient permission level
         if (!sender.hasPermission("whimc-photographer.admin")) {
             sender.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
 
+        // exit if no subcommand provided
         if (args.length == 0) {
             sender.sendMessage("/photographer clients");
             sender.sendMessage("/photographer disconnect-all");
@@ -40,8 +50,10 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // get subcommand name
         String subCmd = args[0];
 
+        // clients subcommand - lists currently active clients (UUID, IP, current player)
         if (subCmd.equalsIgnoreCase("clients")) {
             sender.sendMessage("Clients:");
             for (SocketIOClient client : this.plugin.getSocketServer().getAllClients()) {
@@ -54,6 +66,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // disconnect-all subcommand - disconnects all currently connected clients
         if (subCmd.equalsIgnoreCase("disconnect-all")) {
             this.plugin.getSocketServer().getAllClients().forEach(client -> {
                 sender.sendMessage("Disconnecting " + client.getRemoteAddress() + ": " + client.get("uuid"));
@@ -63,7 +76,9 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // stop-collecting subcommand - un-registers player as photographer
         if (subCmd.equalsIgnoreCase("stop-collecting")) {
+            // exit if command not issued by player
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + "Must be a player!");
                 return true;
@@ -74,10 +89,12 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // exit if no matching single-argument subcommand
         if (args.length < 2) {
             return true;
         }
 
+        // check for valid UUID and get associated client
         UUID uuid;
         try {
             uuid = UUID.fromString(args[1]);
@@ -87,6 +104,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
         }
         Optional<SocketIOClient> clientOpt = this.plugin.getClient(uuid);
 
+        // exit if client cannot be found
         if (!clientOpt.isPresent()) {
             sender.sendMessage("Client not found");
             return true;
@@ -94,6 +112,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
 
         SocketIOClient client = clientOpt.get();
 
+        // disconnect subcommand - disconnects client with provided UUID
         if (subCmd.equalsIgnoreCase("disconnect")) {
             sender.sendMessage("Disconnecting " + client.getRemoteAddress() + ": " + client.get("uuid"));
             CameraOperator.getCameraOperator(client.get("uuid")).ifPresent(CameraOperator::unregister);
@@ -101,12 +120,15 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // collect subcommand - become a photographer
         if (subCmd.equalsIgnoreCase("collect")) {
+            // exit if command not issued by player
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + "You have to be a player");
             }
             Player player = (Player) sender;
 
+            // make current player a photographer
             Optional<CameraOperator> camera = CameraOperator.registerCameraOperator(this.plugin, player, client);
             if (camera.isPresent()) {
                 player.sendMessage(ChatColor.GREEN + "You have become a photographer for " + client.get("uuid"));
@@ -117,12 +139,15 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // send subcommand - sends a message to the client with provided UUID
         if (subCmd.equalsIgnoreCase("send")) {
+            // exit if not enough arguments
             if (args.length <= 2) {
                 sender.sendMessage(ChatColor.ITALIC + "/photographer send <uuid> <msg>");
                 return true;
             }
 
+            // send message to client
             String message = StringUtils.join(args, " ", 2, args.length);
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () ->
                     client.sendEvent("message", message)
@@ -134,7 +159,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
     }
 
 
-
+    /** {@inheritDoc} */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length <= 1) {
