@@ -51,7 +51,7 @@ public class CameraOperator {
     }
 
     /**
-     * Registers a player as a camera operator.
+     * Registers a player as a CameraOperator.
      * @param plugin The instance of the plugin.
      * @param player The player.
      * @param client The client.

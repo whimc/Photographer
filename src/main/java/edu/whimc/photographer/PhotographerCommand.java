@@ -30,9 +30,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // exit if sender does not have sufficient permission level
@@ -161,9 +159,7 @@ public class PhotographerCommand implements CommandExecutor, TabCompleter {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length <= 1) {
