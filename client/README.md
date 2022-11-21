@@ -19,3 +19,6 @@ pip install -r requirements.txt
 ```
 python photographer.py --host <main server ip> --port 8235
 ```
+
+## UIUC-Specific
+If you are connecting remotely to a UIUC client machine you may need to first connect via VPN and then add the domain UOFI\netID
