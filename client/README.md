@@ -4,7 +4,8 @@
 
 The client will run `photographer.py`. This script is responsible for taking screenshots whenever the server requests.
 It connects to the server running `WHIMC-Photographer` via a WebSocket to communicate.
-The server will req
+
+The server requires an independently connected Minecraft account with OP and admin group permissions. You should have it running on the same machine as the client and maximized to full screen. Once running activate it with /photographer collect <UUID will likely autofill>
 
 ## Setup
 
