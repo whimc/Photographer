@@ -6,6 +6,8 @@ Refer to the [WHIMC-Photographer Client README](/client/README.md) for client se
 
 [![GitHub release (latest by date)](https://img.shields.io/badge/WHIMC--Photographer-Download-blue)](https://github.com/whimc/Photographer/releases/latest)
 
+More information on the website at [https://whimc.github.io/MineObserver-2.0/](https://whimc.github.io/MineObserver-2.0/).
+
 ## Building
 
 Compile a jar from the command line via Maven:
