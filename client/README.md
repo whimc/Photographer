@@ -1,10 +1,11 @@
 # WHIMC-Photographer Client
 
-**This can currently only be ran on Windows machines!**
+**This currently only runs on Windows machines!**
 
 The client will run `photographer.py`. This script is responsible for taking screenshots whenever the server requests.
 It connects to the server running `WHIMC-Photographer` via a WebSocket to communicate.
-The server will req
+
+The server requires an independently connected Minecraft account with OP and admin group permissions. You should have it running on the same machine as the client and maximized to full screen. Once running, become a photographer with `/photographer collect <UUID>`. The UUID will auto-fill.
 
 ## Setup
 
@@ -18,3 +19,6 @@ pip install -r requirements.txt
 ```
 python photographer.py --host <minecraft server ip> --port <port from plugin config> --api-version <1 | 2>
 ```
+
+## UIUC-Specific
+If you are connecting remotely to a UIUC client machine you may need to first connect via VPN and then add the domain UOFI\netID
